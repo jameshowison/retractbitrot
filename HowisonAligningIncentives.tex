@@ -95,9 +95,80 @@ How might we use our current publishing and academic reputation system to promot
 
 \section{Introduction}
 
-Currently our publication system rewards authors at the time of publication. Ostensibly publication is the event that renders the material available for use by others (at least when complemented by availability through libraries). Yet there is a time-lag between publication and use of the contribution by others (perhaps the most telling assessment of impact). For many types of contribution this time-lag is not too problematic: abstract concepts such as mathematical proofs may not decline in usefulness, but for contributions reliant on software, the time gap between publication and attempted use can be highly problematic, as described below, creating a need for significant work before new science can be undertaken. For software, at least, publication, which generates the reputational reward, is removed from use, which generates a key scientific benefit.
+Currently our publication system rewards authors at the time of publication. Ostensibly publication is the event that renders the material available for use by others. Yet there is a time-lag between publication and use of the contribution by others. For many types of contribution this time-lag is not too problematic: abstract concepts such as mathematical proofs may not decline in usefulness over this period. For contributions that rely on software, the time gap between publication and attempted use can be highly problematic creating a need for significant work by the recipient before their new science can benefit from the previous contribution. For software, at least, publication, which generates the reputational reward, is removed from use, which generates a key scientific benefit. During that gap, the software contributions "de-synchronize" due to change in the software ecosystem, an issue known as "bit rot". This paper makes an proposal (or proposals) to motivate people to undertake this work and to keep scientific software useful over time. The proposal is provocative but actionable; by provoking reaction, I hope to help readers identify what it is they really value when it comes to scientific software and consider how the work to realize that value is distributed across science.
 
-In this paper I make a provocative proposal that envisions an actionable tweak to the publication system that re-aligns these elements while simultaneously opening up opportunities for education and legitimate peripheral participation in cutting edge scientific research.  First, however, I build my argument by revisiting the oft-cited goal of replicability in scientific research.
+First I discuss how scientists use the code of others, second I discuss why code becomes less useful as it de-synchronizes from the surrounding software ecosystem, third I discuss the work needed to avoid this desynchronization and highlight where that work currently falls. Fourth, I consider who might do this work and how they might be motivated to do it. I then present a range of tweaks to the current publication system that would realign. Finally I anticipate objections to these suggestions and reflect on how these reveal what is really valued in science.
+
+\subsection{How do scientists use the code of others?}
+
+Interviews and observations among scientists using software have highlighted a continuum of reuse of the software written by other scientists.  At one end scientists re-use code that others have written by studying it. Software is a precise (if not always clear) statement of what other scientists did; recent studies have shown that, unlike methods sections or abstract descriptions of algorithms, studying the software itself can enable scientists to understand and to be sure they've understood the methods of other scientists. Ince et al. (2012), writing in Nature, showed that without software being available, results could not be replicated; that descriptions of procedures were insufficient.
+
+At the other end of this spectrum, scientists use the code of others to support new science, by extending the capabilities of the code to support new inquiry. Howison and Herbsleb (2011) examined the software behind three eminent papers and identified each of the pieces of code used together to produce the scientific results, calling these directly used pieces of software "complements" making up a workflow. They then worked outwards to examine the code used in term by each complement, calling those "dependencies", and drawing a map of the full stack of software drawn on to produce the results reported in the papers. The three papers used XX pieces directly but XX pieces indirectly, including many written by other scientists. By combining the code of others with new software written by themselves scientists re-use code to extend its capabilities toward new science. Re-use of this kind might involve directly editing the code of others, or it might involve writing "glue-code" to move the outputs of one piece of code to another.
+
+I write that re-use of code forms a continuum because the need for those re-using the software to have it actually run increase from left to right (from study to extension).  Software that doesn't run at all can still be read and studied, although it is far often easier to understand code if one can run it, allowing one to test ones hypotheses about how it works with known data, or by making small changes and re-running the code. At the other end of the spectrum, efforts to re-use code through extension require the code to run, and some styles of extension require the ability to access, edit, and re-compile the source code.  In the middle of this continuum lie styles of re-use that might best be described as "parameterization," the re-use of unchanged code on new data, or small changes that expand the range of situations in which the code could be re-used.
+
+While studying code is important, it is in extension that the potential benefits of software re-use in science become particularly apparent. Rather than spending time re-implementing from the ground up, new waves of scientific discovery can stand on the shoulders of existing work and drive science forward while saving considerable time and expense. Perhaps just as valuably, by using and re-using the same software, scientists can be more sure that they are talking about and doing the same things, allowing them to relate their results to the work of others more reliably.
+
+Another characteristic of software re-use in science is that the work of scientists is bursty in time. Substantial periods of time can go past between one scientist preparing code and publishing a paper based on that software use, and another scientist becoming aware of the work, reading the paper, and seeking to extend the work. These lags can be years long, but probably range from a few months to a few years. Moreover, substantial periods of time can go by between uses of a scientists own software stack. In interviews with scientists they relate that they work closely with code for a period within their overall scientific projects, often transitioning from direct work with code into other, non-code intensive periods, such as data collection, paper preparation, and grant writing. In addition scientists typically have multiple projects running in parallel, some of which might involve using the same code, but quite frequently different projects either use different software code or don't use software code at all. This means that substantial periods of time can go past before scientists revisit their own workflows, periods from a couple of months to a year or more were reported. This pattern of software use is quite different to how software is re-used outside science, such as for a web application, where the code executes many times a day and is continually worked on as the primary focus of multiple people.
+
+\subsection{What is bit-rot and how does it occur?}
+
+During the gaps of time between the creation, publication, and re-use of software, the world changes.  The software world, at least. For any given piece of software new versions of its complements and dependencies are released, both those created directly in science and those outside science (where the pace of change is faster). This leads to a process called "bit-rot". Of course, as digital information, software does not actually rot; rather the usefulness of any specific piece of software decays. Any number of small changes can render software unable to run.  The cause can be as simple as the location of a file or the name of a folder changing, as complex as an operating system update changing some fundamental interface, or as uncontrollable as a web-service disappearing.
+
+If the intention of software re-use is simply to study the code then bit-rot might not be such a substantial issue, after all the code is still readable. Even for parameterization or "black-box" reuse, bit-rot might only be a problem when something is unintentionally changed "underneath" the code being reused. In these situations proposals to "freeze" the software environment through virtual machines or other containers (like docker) make a great deal of sense (need a cite here): if the full state of the software environment in which the code was running can be preserved, then the code will continue to run.
+
+Yet as the intention moves to the right in the continuum above (towards reuse through extension) the re-using scientists themselves are driven towards using current, updated, versions of the software, both immediate workflow elements and their dependencies. This occurs even if the software itself still runs! That is because newer versions not only allow for new scientific methods, but also new features, better performance, and new hardware support. Further, older versions of dependencies may not be available or the person re-using the code may not know the version originally used (making "software archeology" extremely difficult). Possibly even more importantly, communities that support the software will often decline to help with older versions, either because they no longer remember or because helping with older versions means working around already fixed issues and takes away development time that might help improve the current version. Developers are often unhappy to have users working with older versions, even if only because those users are now not providing testing and ideas for the cutting edge (cite Terry). Thus even software that continues to run can be bit-rotten, just by remaining the same in a changing software ecosystem.
+
+\subsection{What work is needed to cope with bit-rot?}
+
+When bit-rot sets in, a piece of software has become out of sync with the software ecosystem that surrounds it. Resynchronizing the software can be extremely frustrating work, often involving multiple rounds chasing down subtle effects of introducing new versions and finding new versions of the dependencies of your dependencies.  Not for nothing is this known as descending into ``dependency hell''. The work involves identifying desynchronization, updating components, and adjusting potentially updating code to respond to any of the changes in the code.
+
+In theory the work of identifying desynchronization could be done prospectively, monitoring the changes in a fairly large set of complements and dependencies, and applying updates as they arrive.  Far more often, though, de-synchronization is discovered when a scientist returns to a workflow after some time and begins to extend it for new work.  If a reader has ever wondered what took their graduate student so long to get an analysis working again, it is very likely because the student was working to resynchronize the code with its surrounding ecosystem.
+
+The burstiness of scientists work with code means that often months or even years go by before de-synchronization is discovered. Those gaps make the work significantly harder, with changes interacting with each other and being more likely to require larger jumps in versions. Larger jumps in versions not only mean that the code is likely to need more adjustment, but also that the user is even less familiar with their code and the updated codes. Moreover, it is also less likely that a support community will be able to assist, as those most active (and thus able to help) have often updated much earlier and are both less likely to remember the issues and to be motivated to help. The adage ``a stitch in time saves nine'' applies well to synchronization work; done regularly and in small steps, the work tends to be easier; it's difficulty scaling superlinearly with the time that passes since the last effort to synchronize the code.
+
+\subsection{Who does this work now (if anyone)?}
+
+
+
+\subsubsection{The potential user}
+
+Currently the majority of sensing and synchronization work is done by the scientist seeking to use the software. Their motivation is relatively clear: they are motivated by the need to advance their own science and their own careers.
+
+The downsides of having the potential user undertake synchronization work are many.  First this work is difficult and frustrating
+
+\subsubsection{The original authors}
+
+The original authors of the software are in an excellent position to do the synchronization work, since they know the codebase best.  Yet their motivation after the publication of an original paper that used their code is unclear.  Some may be motivated by the reputation for providing good quality software, but the lack of synchronization work suggests this is not that common. 
+
+Even well motivated original authors can find providing synchronization work difficult. That's because it can be difficult for original authors to learn of desynchronization: often they have moved onto other work and so are not working actively with the code.  More, it is hard for them to know how others are using their code, with what parameters, and what complements. End-users at least know their own work environment; original authors have to work to know.
+
+They are also in good position to distribute the synchronization changes to others.
+
+\subsubsection{Third parties}
+
+Third parties are neither motivated by maintaining the reputation of the original authors, nor by the scientific reward of the work that others want to do with the 
+
+\subsection{The challenge}
+
+The challenge presented by the analysis above is threefold.  We would like to identify de-synchronization of scientific software, identify which software deserves to be re-synchronized, and motivate someone to undertake the synchronization work.  The current situation places each of those three elements in the hand of individual potential end-users; it is a frustrating and costly system.
+
+\subsection{A provocative proposal}
+
+Any paper which is not kept synchronized is retracted.
+
+\subsubsection{Motivating authors}
+\subsubsection{Motivating others}
+
+\subsection{Reactions and what they tell us about what is valued}
+
+
+
+
+
+
+
+
 
 \subsection{The four meanings of replication}
 
